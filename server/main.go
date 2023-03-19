@@ -1,19 +1,21 @@
 package main
 
 import (
+	"erpgo/config"
+	"log"
 	"net/http"
 )
 
 func main() {
-	s := CreateNewServer()
-	s.MountHandlers()
-	// r := chi.NewRouter()
-	// r.Use(middleware.Logger)
-	// r.Get("/", func(w http.ResponseWriter, r *http.Request) {
-	// 	w.Write([]byte("Hello World!"))
-	// })
+	LoadEnvVars()
 
-	// fmt.Println("Listening on port 3000...")
-	http.ListenAndServe(":3000", s.Router)
+	settings := config.GetSettings()
+
+	log.Println("Setting up server")
+	s := CreateNewServer()
+	s.Initialize()
+
+	log.Printf("Listening on port %s...", settings.Port)
+	log.Fatal(http.ListenAndServe(":"+settings.Port, s.Router))
 
 }
