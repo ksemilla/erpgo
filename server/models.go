@@ -6,15 +6,18 @@ import (
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
+	"go.mongodb.org/mongo-driver/mongo"
 )
 
 type Server struct {
 	Router *chi.Mux
+	DB     *mongo.Client
 }
 
 func (s *Server) MountHandlers() {
 	// Mount all handlers here
-	s.Router.Get("/", handlers.HelloWorld)
+	hellohandler := &handlers.HelloWorldHandler{DB: s.DB}
+	s.Router.Get("/", hellohandler.HelloWorld)
 }
 
 func (s *Server) MountMiddlewares() {

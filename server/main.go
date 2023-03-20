@@ -2,6 +2,7 @@ package main
 
 import (
 	"erpgo/config"
+	"erpgo/database"
 	"log"
 	"net/http"
 )
@@ -11,8 +12,9 @@ func main() {
 
 	settings := config.GetSettings()
 
-	log.Println("Setting up server")
-	s := CreateNewServer()
+	db := database.CreateDBClient()
+
+	s := CreateNewServer(db)
 	s.Initialize()
 
 	log.Printf("Listening on port %s...", settings.Port)
